@@ -1,5 +1,6 @@
 const state = {
-  mapMarkers: []
+  // 地图标记点
+  mapMarkers: [], 
 }
 const getters = {
   getMapMarkers: state => state.mapMarkers,
