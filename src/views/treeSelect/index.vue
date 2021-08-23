@@ -1,6 +1,6 @@
 <template>
   <div>
-    
+    <jump-website></jump-website>
     <el-tree-select
       v-model="form"
       :normalizer="normalizer"
@@ -12,8 +12,11 @@
   </div>
 </template>
 <script>
-import jumpWebsite from '../../';
+import jumpWebsite from '../../components/jumpWebsite.vue';
 export default {
+  components: {
+    jumpWebsite
+  },
   data() {
     return {
       form: null,
