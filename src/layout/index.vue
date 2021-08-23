@@ -23,10 +23,10 @@
           </el-menu-item>
         </el-submenu>
         <!-- children 只有一个，点击父级跳转 -->
-        <el-menu-item v-else-if="item.children.length == 1">
+        <el-menu-item v-else-if="item.children.length == 1" :index="item.path">
           <i
             v-if="item.children[0].meta.icon"
-            :class="icon.children[0].meta.icon"
+            :class="item.children[0].meta.icon"
           ></i>
           {{ item.children[0].meta.name }}
         </el-menu-item>

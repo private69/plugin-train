@@ -5,6 +5,9 @@ import store from './store/index';
 
 import './plugin/elementUI';
 import './plugin/vueAmap';
+import './plugin/vueTreeSelect'
+import './plugin/mavonEditor'
+
 import './assets/css/global.css'
 import './assets/css/icons/iconfont.css'
 

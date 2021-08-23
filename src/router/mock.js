@@ -25,18 +25,24 @@ export default [
         path: '/amap',
         meta: {
           name: 'vue-amap 地图',
-          icon: 'iconfont icon-logistic'
+          icon: 'iconfont icon-earth'
         },
         // 详细到文件后缀，由于结构中存在多个index，避免冲突
         component: () => import('../views/amap/index.vue')
       },
+    ]
+  },
+  {
+    path: '/treeSelect',
+    component: Layout,
+    children: [
       {
-        path: '/amap',
+        path: '/treeSelect',
         meta: {
-          name: 'vue-amap 地图'
+          name: 'vue-select组件',
+          icon: ''
         },
-        // 详细到文件后缀，由于结构中存在多个index，避免冲突
-        component: () => import('../views/amap/index.vue')
+        component: () => import('../views/treeSelect/index')
       }
     ]
   },
