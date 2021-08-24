@@ -15,10 +15,24 @@ export default [
     ]
   },
   {
+    path: '/mavonEditor',
+    component: Layout,
+    children: [
+      {
+        path: '/mavonEditor',
+        meta: {
+          name: 'MD编辑器',
+          icon: ''
+        },
+        component: () => import('../views/mavonEditor/index')
+      }
+    ]
+  },
+  {
     path: '/amap',
     component: Layout,
     meta: {
-      name: "地图"
+      name: "vue 外部插件"
     },
     children: [
       {
@@ -30,12 +44,6 @@ export default [
         // 详细到文件后缀，由于结构中存在多个index，避免冲突
         component: () => import('../views/amap/index.vue')
       },
-    ]
-  },
-  {
-    path: '/treeSelect',
-    component: Layout,
-    children: [
       {
         path: '/treeSelect',
         meta: {

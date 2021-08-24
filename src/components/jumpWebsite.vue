@@ -7,7 +7,11 @@
 </template>
 <script>
 export default {
-  
+  methods: {
+    jumpWebsite() {
+      this.$emit('jumpWebsite');
+    }
+  }
 }
 </script>
 <style scoped>

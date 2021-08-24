@@ -46,7 +46,7 @@
       <el-menu-item index="/setting">处理中心</el-menu-item>
       <el-menu-item index="1">处理中心</el-menu-item> -->
     </el-menu>
-    <div>
+    <div class="right-page">
       <router-view />
     </div>
   </div>
@@ -85,6 +85,9 @@ export default {
 }
 .el-menu-vertical-demo i {
   padding-right: 10px;
+}
+.all-page .right-page{
+  width: 100%;
 }
 
 </style>
