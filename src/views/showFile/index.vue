@@ -5,10 +5,9 @@
       action="https://jsonplaceholder.typicode.com/posts/"
       :on-preview="handlePreview"
       :on-remove="handleRemove"
-      :on-success="handleSuccess"
       multiple
       :limit="3"
-      :auto-upload="false"
+      :auto-upload="true"
       :file-list="fileList"
     >
       <el-button size="small" type="primary">点击上传</el-button>
@@ -19,6 +18,7 @@
   </div>
 </template>
 <script>
+import {showxlsx , parse} from '../../utils/parseXLSX'
 export default {
   data() {
     return {
@@ -31,44 +31,17 @@ export default {
     // console.log(this.title)
   },
   methods: {
-    readFile(filePath) {
-      // 创建一个新的xhr对象
-      let xhr = null;
-      if (window.XMLHttpRequest) {
-        xhr = new XMLHttpRequest();
-      } else {
-        // eslint-disable-next-line
-        xhr = new ActiveXObject("Microsoft.XMLHTTP");
-      }
-      const okStatus = document.location.protocol === "file" ? 0 : 200;
-      xhr.open("GET", filePath, false);
-      xhr.overrideMimeType("text/html;charset=utf-8");
-      xhr.send(null);
-      return xhr.status === okStatus ? xhr.responseText : null;
-    },
     handlePreview(file) {
       console.log(file);
       this.getFileData(file);
-    },
-    handleSuccess(file) {
-      console.log(file);
+      return false;
     },
     getFileData(file) {
-      let reader = new FileReader();
-      if (typeof FileReader === "undefined") {
-        this.$message({
-          type: "info",
-          message: "您的浏览器不支持文件读取。"
-        });
-        return;
-      }
-      reader.readAsBinaryString(file.raw);
-      var _this = this;
-      reader.onload = function(e) {
-        console.log(e);
-        _this.textInfo = e.target.result;
-        console.log(_this.textInfo);
-      };
+      showxlsx(file.raw).then( res => {
+        console.log(res);
+        let result = parse(res.Sheets.Sheet1);
+        console.log(result);
+      })
     },
     handleRemove() {},
   },
