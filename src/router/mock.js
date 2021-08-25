@@ -54,4 +54,18 @@ export default [
       }
     ]
   },
+  {
+    path: '/showFile',
+    component: Layout,
+    children: [
+      {
+        path: '/showFile',
+        meta: {
+          name: 'showFile',
+          icon: ''
+        },
+        component: () => import('../views/showFile/index')
+      }
+    ]
+  },
 ]
