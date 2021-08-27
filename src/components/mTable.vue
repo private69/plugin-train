@@ -11,7 +11,9 @@
       @row-click="handleRowClick"
       :row-style="tableDataStyle"
       :cell-style="cellStyle"
+      :show-header="showHeader"
       :header-cell-style="tableHeaderStyle"
+      :span-method="arraySpanMethod"
     >
       <el-table-column
         v-if="isCheckBox"
@@ -93,7 +95,7 @@ export default {
   props: {
     refName: {
       type: String,
-      default: ""
+      default: "mTable"
     },
     //表格数据
     tableData: {
@@ -161,6 +163,18 @@ export default {
       default: () => {
         return {children: '', hasChildren: ''}
       },
+    },
+    // 是否展示表头
+    showHeader: {
+      type: Boolean,
+      default: true
+    },
+    // 合并的数据
+    mergeTable: {
+      type: Array,
+      default: function() {
+        return [];
+      },
     }
   },
   data() {
@@ -206,6 +220,18 @@ export default {
       // if(row.status === "离线" && column.label === "设备状态")
       //   return { color: "#DE3D3D" }
       return { color: "#3E3E48" }
+    },
+    // arraySpanMethod({ row, column, rowIndex, columnIndex }) {
+    // 增加表格合并
+    arraySpanMethod({ rowIndex }) {
+      if(!this.mergeTable.length)
+        return ;
+      let arr = this.mergeTable.map( v => {
+        let [r , c] = v;
+        if(rowIndex == r)
+          return Number(c) + 1;
+      }).filter( v => v);
+      return arr.length?arr:"";
     },
     //表格中操作事件触发
     clickOn(data, fun) {

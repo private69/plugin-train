@@ -1,5 +1,5 @@
 const { read } = require("xlsx");
-exports.showxlsx = function(data) {
+exports.showxlsx = function(data , type = "readAsBinaryString") {
   return new Promise( (resolve,reject) => {
     let options = { type: "binary" };
     const file = new FileReader();
@@ -10,7 +10,7 @@ exports.showxlsx = function(data) {
       });
       return;
     }
-    file.readAsBinaryString(data);
+    file[type](data);
     file.onload = function(e){
       let result = e.target.result;
       try {
@@ -22,23 +22,26 @@ exports.showxlsx = function(data) {
     }
   })
 }
-exports.parse = function(obj) {
+exports.parse = function(params) {
+  let SheetNames = params.SheetNames[0];
+  if(!SheetNames) throw new Error("params error !");
+  let obj = {...params.Sheets[SheetNames]};
+  if(!obj) throw new Error(`${SheetNames} error !`);
   let res = {} , merge = [];
   let header = [];
-  // console.log(obj);
   Object.keys(obj).map( v => {
     if(v == "!margins" || v == "!ref") return ;
     if(v == "!merges") {
       obj[v].map( item => {
-        merge.push(func(item));
+        merge.push(getMergeMessage(item));
       })
+      return ;
     }
-    let [row , number] = [v.split("").slice(0,1) , v.split("").slice(1)];
+    let [row , number] = [v.split("").slice(0,1) , v.split("").slice(1).join("")];
     !res[row] && (res[row] = []);
     res[row][number] = obj[v]["v"];
   })
   for(let k in res){
-    // console.log(k.charCodeAt());
     if(!(/[a-zA-Z]/.test(k))) continue;
     header.push({
       prop: k,
@@ -48,7 +51,7 @@ exports.parse = function(obj) {
   return {
     header,
     data: res,
-    merge
+    merge: merge[0],
   }
 }
 exports.readFile = function(filePath) {
@@ -66,7 +69,29 @@ exports.readFile = function(filePath) {
   xhr.send(null);
   return xhr.status === okStatus ? xhr.responseText : null;
 }
-function func(obj) {
+exports.showFileData = function(data , type = "readAsText") {
+  return new Promise( (resolve,reject) => {
+    const file = new FileReader();
+    if (typeof FileReader === "undefined") {
+      this.$message({
+        type: "info",
+        message: "您的浏览器不支持文件读取。"
+      });
+      return;
+    }
+    file[type](data);
+    file.onload = function(e){
+      try {
+        let result = e.target.result;
+        resolve(result);
+      } catch (error) {
+        reject(error)
+      }
+    }
+  })
+}
+// 获取合并信息
+function getMergeMessage(obj) {
   let result = []
   Object.keys(obj).map( v => {
     result.push([obj[v].r,obj[v].c]);
