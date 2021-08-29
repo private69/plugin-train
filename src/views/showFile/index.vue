@@ -22,7 +22,7 @@
         :loading="loading"
         :tableHeader="tableHeader"
         :tableData="tableData"
-        :showHeader="false"
+        :showHeader="showHeader"
         :mergeTable="mergeTable"
       ></m-table>
       <pre>{{ primaryFileData }}</pre>
@@ -30,12 +30,13 @@
   </div>
 </template>
 <script>
-import { showxlsx, parse ,showFileData} from "../../utils/parseXLSX";
+import { showxlsx, parse, showFileData } from "../../utils/parseXLSX";
 import mTable from "../../components/mTable.vue";
 export default {
   components: { mTable },
   data() {
     return {
+      showHeader: false,
       loading: false,
       fileList: [],
       tableHeader: [], // excel 表头
@@ -49,24 +50,45 @@ export default {
     // 加载前的预览
     handleBeforeUpload(file) {
       console.log(file);
-      if(/.(xlsx|xls)$/.test(file.name))
+      this.showHeader = false;
+      if (/.(xlsx|xls)$/.test(file.name)) 
         this.getExcelFileData(file);
-      if(/.(doc|docx)$/.test(file.name))
+      if (/.(doc|docx)$/.test(file.name)) 
         this.getWordFileData(file);
-      if(/.(md|txt|js|html|css|bat|cmd|json)$/.test(file.name))
+      if (/.(md|txt|js|html|css|bat|cmd)$/.test(file.name))
         this.getPrimaryFileData(file);
-      return ;
+      if (/.(json)$/.test(file.name)) 
+        this.getJSONFileData(file);
+      return;
     },
+    // 普通文件
     getPrimaryFileData(file) {
-      showFileData(file).then( res => {
-        // console.log(res);
+      showFileData(file).then((res) => {
+        console.log(res);
         this.primaryFileData = res;
-      })
+      });
+    },
+    // 数据转化为表格
+    getJSONFileData(file) {
+      showFileData(file).then((res) => {
+        if (!res.length) return;
+        let arr = JSON.parse(res);
+        Object.keys(arr[0]).map((v) => {
+          const header = {
+            label: v,
+            prop: v,
+            align: "center",
+          };
+          this.tableHeader.push(header);
+        });
+        this.tableData = [...arr];
+        this.showHeader = true;
+      });
     },
     getWordFileData(file) {
-      showFileData(file,"readAsBinaryString").then( res => {
+      showFileData(file, "readAsBinaryString").then((res) => {
         this.primaryFileData = res;
-      })
+      });
     },
     // 获取 excel 文件数据
     getExcelFileData(file) {
@@ -96,7 +118,7 @@ export default {
           this.loading = false;
         });
         this.mergeTable = [...result.merge];
-        console.log(result); 
+        console.log(result);
         console.log(this.tableData);
       });
     },
