@@ -15,7 +15,6 @@
         只能上传jpg/png文件，且不超过500kb
       </div>
     </el-upload>
-    <div><div class="qrcode" ref="qrCodeUrl"></div></div>
     <div class="showArea" v-if="tableData.length >= 1 || primaryFileData">
       <m-table
          v-if="tableData.length >= 1"
@@ -33,7 +32,6 @@
 <script>
 import { showxlsx, parse, showFileData } from "../../utils/parseXLSX";
 import mTable from "../../components/mTable.vue";
-import QRCode from 'qrcodejs2'
 export default {
   components: { mTable },
   data() {
@@ -49,20 +47,8 @@ export default {
     };
   },
   mounted() {
-    this.creatQrCode();
   },
-  methods: {
-    creatQrCode() {
-      this.qrcode = new QRCode(this.$refs.qrCodeUrl, {
-          // text: 'xxxxcasdkcaksdalsdkcmasdcmdc sijpewcmadpcm', // 需要转换为二维码的内容
-          text: `{"序号":"","线路":"ffffg","里程":"12","站段":"怀化车务段","车间":"柳州西","岗位":"党总支副书记","显示名称":"1212","失检天数":"12","状态":"1"}`, // 需要转换为二维码的内容
-          width: 200,
-          height: 200,
-          colorDark: '#000000',
-          colorLight: '#ffffff',
-          correctLevel: QRCode.CorrectLevel.H
-      })
-    },
+  methods: {  
     // 加载前的预览
     handleBeforeUpload(file) {
       console.log(file);

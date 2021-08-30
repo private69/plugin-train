@@ -61,10 +61,24 @@ export default [
       {
         path: '/showFile',
         meta: {
-          name: 'showFile',
+          name: '文件上传展示',
           icon: ''
         },
         component: () => import('../views/showFile/index')
+      }
+    ]
+  },
+  {
+    path: '/qrcode',
+    component: Layout,
+    children: [
+      {
+        path: '/qrcode',
+        meta: {
+          name: '二维码',
+          icon: ''
+        },
+        component: () => import('../views/qrcode/index')
       }
     ]
   },
