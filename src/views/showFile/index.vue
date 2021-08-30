@@ -15,9 +15,10 @@
         只能上传jpg/png文件，且不超过500kb
       </div>
     </el-upload>
-    <div class="showArea">
+    <div><div class="qrcode" ref="qrCodeUrl"></div></div>
+    <div class="showArea" v-if="tableData.length >= 1 || primaryFileData">
       <m-table
-        v-if="tableData.length"
+         v-if="tableData.length >= 1"
         ref="mtable"
         :loading="loading"
         :tableHeader="tableHeader"
@@ -25,13 +26,14 @@
         :showHeader="showHeader"
         :mergeTable="mergeTable"
       ></m-table>
-      <pre>{{ primaryFileData }}</pre>
+      <pre  v-if="primaryFileData">{{ primaryFileData }}</pre>
     </div>
   </div>
 </template>
 <script>
 import { showxlsx, parse, showFileData } from "../../utils/parseXLSX";
 import mTable from "../../components/mTable.vue";
+import QRCode from 'qrcodejs2'
 export default {
   components: { mTable },
   data() {
@@ -43,10 +45,24 @@ export default {
       tableData: [], // excel 表格数据
       mergeTable: [], // 表格合并情况
       primaryFileData: "", // 普通文件数据
+      qrcode: {}
     };
   },
-  mounted() {},
+  mounted() {
+    this.creatQrCode();
+  },
   methods: {
+    creatQrCode() {
+      this.qrcode = new QRCode(this.$refs.qrCodeUrl, {
+          // text: 'xxxxcasdkcaksdalsdkcmasdcmdc sijpewcmadpcm', // 需要转换为二维码的内容
+          text: `{"序号":"","线路":"ffffg","里程":"12","站段":"怀化车务段","车间":"柳州西","岗位":"党总支副书记","显示名称":"1212","失检天数":"12","状态":"1"}`, // 需要转换为二维码的内容
+          width: 200,
+          height: 200,
+          colorDark: '#000000',
+          colorLight: '#ffffff',
+          correctLevel: QRCode.CorrectLevel.H
+      })
+    },
     // 加载前的预览
     handleBeforeUpload(file) {
       console.log(file);
@@ -59,7 +75,7 @@ export default {
         this.getPrimaryFileData(file);
       if (/.(json)$/.test(file.name)) 
         this.getJSONFileData(file);
-      return;
+      return false;
     },
     // 普通文件
     getPrimaryFileData(file) {
@@ -72,21 +88,25 @@ export default {
     getJSONFileData(file) {
       showFileData(file).then((res) => {
         if (!res.length) return;
-        let arr = JSON.parse(res);
-        Object.keys(arr[0]).map((v) => {
-          const header = {
-            label: v,
-            prop: v,
-            align: "center",
-          };
-          this.tableHeader.push(header);
-        });
-        this.tableData = [...arr];
-        this.showHeader = true;
+        try{
+          let arr = JSON.parse(res + '');
+          Object.keys(arr[0]).map((v) => {
+            const header = {
+              label: v,
+              prop: v,
+              align: "center",
+            };
+            this.tableHeader.push(header);
+          });
+          this.tableData = [...arr];
+          this.showHeader = true;
+        }catch(err){
+          console.error("err:" , err.message);
+        }
       });
     },
     getWordFileData(file) {
-      showFileData(file, "readAsBinaryString").then((res) => {
+      showFileData(file, "readAsText").then((res) => {
         this.primaryFileData = res;
       });
     },
@@ -128,6 +148,7 @@ export default {
 </script>
 <style>
 .showArea {
+  margin-top: 50px;
   height: 500px;
   overflow-y: scroll;
 }
