@@ -80,7 +80,7 @@ export default {
 }
 .el-menu-vertical-demo {
   display: "inline-block";
-  width: 200px;
+  min-width: 200px;
   height: 100vh;
 }
 .el-menu-vertical-demo i {

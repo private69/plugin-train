@@ -1,3 +1,4 @@
+<!-- vue.amap 地图 -->
 <template>
   <div class="amap">
     <el-amap 

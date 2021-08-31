@@ -1,4 +1,12 @@
 const { read } = require("xlsx");
+const mammoth = require("mammoth");
+// 解析 word 文档 转化为 html 
+exports.parseWord = function(input , options = {
+  styleMap: ["comment-reference => sup"]
+}) {
+  return mammoth.convertToHtml(input, options);
+}
+// 解析 excel 文件
 exports.showxlsx = function(data , type = "readAsBinaryString") {
   return new Promise( (resolve,reject) => {
     let options = { type: "binary" };

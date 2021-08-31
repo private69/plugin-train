@@ -15,6 +15,20 @@ export default [
     ]
   },
   {
+    path: '/echarts',
+    component: Layout,
+    children: [
+      {
+        path: '/echarts',
+        meta: {
+          name: 'echart图表',
+          icon: ''
+        },
+        component: () => import('../views/echarts/index')
+      }
+    ]
+  },
+  {
     path: '/mavonEditor',
     component: Layout,
     children: [
@@ -32,14 +46,14 @@ export default [
     path: '/amap',
     component: Layout,
     meta: {
-      name: "vue 外部插件"
+      name: "vue 外部插件",
     },
     children: [
       {
         path: '/amap',
         meta: {
           name: 'vue-amap 地图',
-          icon: 'iconfont icon-earth'
+          icon: ''
         },
         // 详细到文件后缀，由于结构中存在多个index，避免冲突
         component: () => import('../views/amap/index.vue')

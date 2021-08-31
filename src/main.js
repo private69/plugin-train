@@ -7,6 +7,7 @@ import './plugin/elementUI';
 import './plugin/vueAmap';
 import './plugin/vueTreeSelect'
 import './plugin/mavonEditor'
+import './plugin/echarts';
 
 import './assets/css/global.css'
 import './assets/css/icons/iconfont.css'

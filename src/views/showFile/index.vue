@@ -1,3 +1,4 @@
+<!-- 文件解析 -->
 <template>
   <div>
     <el-upload
@@ -12,10 +13,10 @@
     >
       <el-button size="small" type="primary">点击上传</el-button>
       <div slot="tip" class="el-upload__tip">
-        只能上传jpg/png文件，且不超过500kb
+        展示上传的文件的内容
       </div>
     </el-upload>
-    <div class="showArea" v-if="tableData.length >= 1 || primaryFileData">
+    <div class="showArea" v-show="tableData.length >= 1 || primaryFileData || ifWord || ifImage">
       <m-table
          v-if="tableData.length >= 1"
         ref="mtable"
@@ -25,25 +26,49 @@
         :showHeader="showHeader"
         :mergeTable="mergeTable"
       ></m-table>
-      <pre  v-if="primaryFileData">{{ primaryFileData }}</pre>
+      <pre v-show="primaryFileData || ifWord" ref="fileData">{{ primaryFileData }}</pre>
+      <img v-show="ifImage" :src="imageSrc" alt="Error">
+    </div>
+    <!-- pdf -->
+    <div v-show="ifpdf" class="showPDFArea">
+      <div>
+        <pdf ref="pdfComponent" :src="pdfData" :page="pageObj.page"></pdf>
+      </div>
+      <div>
+        <span>
+          <i class="el-icon-arrow-left" @click="pageObj.page>1 && pageObj.page--"></i>
+          <span class="currentPage">{{ pageObj.page }}</span>
+          <i class="el-icon-arrow-right" @click="pageObj.page++"></i>
+          <span style="padding-left: 10px;">{{ '共 ' + pageObj.pageSize + ' 页'}}</span>
+        </span>
+      </div>
     </div>
   </div>
 </template>
 <script>
-import { showxlsx, parse, showFileData } from "../../utils/parseXLSX";
+import { parseWord , showxlsx, parse, showFileData } from "../../utils/parseXLSX";
 import mTable from "../../components/mTable.vue";
+import pdf from 'vue-pdf';
 export default {
-  components: { mTable },
+  components: { mTable , pdf},
   data() {
     return {
-      showHeader: false,
-      loading: false,
-      fileList: [],
+      showHeader: false, // 展示请求头
+      loading: false, 
+      fileList: [], // 文件列表
       tableHeader: [], // excel 表头
       tableData: [], // excel 表格数据
       mergeTable: [], // 表格合并情况
       primaryFileData: "", // 普通文件数据
-      qrcode: {}
+      ifWord: false, // 是否展示 word 文档
+      ifImage: false, // 是否展示图片
+      imageSrc: "", // 图片数据 
+      ifpdf: false, // 是否展示 pdf 
+      pdfData: "", // pdf 数据
+      pageObj: {
+        page: 1,
+        pageSize: 100,
+      }
     };
   },
   mounted() {
@@ -55,12 +80,16 @@ export default {
       this.showHeader = false;
       if (/.(xlsx|xls)$/.test(file.name)) 
         this.getExcelFileData(file);
-      if (/.(doc|docx)$/.test(file.name)) 
+      else if (/.(doc|docx)$/.test(file.name)) 
         this.getWordFileData(file);
-      if (/.(md|txt|js|html|css|bat|cmd)$/.test(file.name))
+      else if (/.(md|txt|js|html|css|bat|cmd)$/.test(file.name))
         this.getPrimaryFileData(file);
-      if (/.(json)$/.test(file.name)) 
+      else if (/.(json)$/.test(file.name)) 
         this.getJSONFileData(file);
+      else if (/.(png|jpg|jpeg)$/.test(file.name)) 
+        this.getImageFileData(file);
+      else if (/.(pdf)$/.test(file.name)) 
+        this.getPdfFileData(file);
       return false;
     },
     // 普通文件
@@ -68,6 +97,26 @@ export default {
       showFileData(file).then((res) => {
         console.log(res);
         this.primaryFileData = res;
+      });
+    },
+    // pdf 文件
+    getPdfFileData(file) {
+      // this.pdfData = file.name; 
+      showFileData(file , "readAsDataURL").then((res) => {
+        let that = this;
+        this.ifpdf = true;
+        this.pdfData = res;
+        this.$refs.pdfComponent.pdf.forEachPage(function(page){
+          that.pageObj.pageSize = page.pageNumber;
+          // console.log(page);
+        })
+      });
+    },
+    // 获取图片
+    getImageFileData(file) {
+      showFileData(file , "readAsDataURL").then((res) => {
+        this.ifImage = true;
+        this.imageSrc = res;
       });
     },
     // 数据转化为表格
@@ -91,9 +140,15 @@ export default {
         }
       });
     },
+    // word 文档
     getWordFileData(file) {
-      showFileData(file, "readAsText").then((res) => {
-        this.primaryFileData = res;
+      showFileData(file, "readAsBinaryString").then((res) => {
+        parseWord({arrayBuffer: res}).then( result => {
+          this.ifWord = true;
+          console.log(result);
+          let pre = this.$refs.fileData;
+          pre.innerHTML = result.value;
+        })
       });
     },
     // 获取 excel 文件数据
@@ -137,5 +192,32 @@ export default {
   margin-top: 50px;
   height: 500px;
   overflow-y: scroll;
+}
+.showPDFArea>div:first-child{
+  width: 100%;
+  height: 700px;
+  overflow-y: scroll;
+}
+.showPDFArea>div:last-child{
+  text-align: center;
+  margin-top: 10px;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+}
+.showPDFArea>div:last-child i{
+  cursor: pointer;
+  padding: 5px;
+}
+.showPDFArea>div:last-child span{
+  color: #999;
+  font-size: 14px;
+}
+.showPDFArea>div:last-child .currentPage{
+  /* padding: 0 20px; */
+  display: inline-block;
+  width: 70px;
 }
 </style>
