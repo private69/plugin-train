@@ -68,12 +68,18 @@ export default {
     qrcodejs2Parse() {
       let canvas = this.$refs.qrCodeUrl.getElementsByTagName("canvas")[0];
       let href = canvas.toDataURL("img/png");
-      this.handleParse(href);
+      let cb = (res) => {
+        this.$message.success(res.data);
+      } 
+      this.handleParse(href , cb);
     },
     qrcodeVueParse() {
       let canvas = document.getElementsByClassName("qrcode")[0].getElementsByTagName("canvas")[0];
       let href = canvas.toDataURL("img/png");
-      this.handleParse(href);
+      let cb = (res) => {
+        this.$message.success(res.data);
+      } 
+      this.handleParse(href ,cb);
     },
     handleParse(url , cb = null) {
       const qr = new qrcodeJs();
