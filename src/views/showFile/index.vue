@@ -17,9 +17,9 @@
         展示上传的文件的内容
       </div>
     </el-upload>
-    <div class="showArea" v-show="tableData.length >= 1 || primaryFileData || ifWord || ifImage">
+    <div class="showArea" v-show="ifExcel || ifPrimary || ifWord || ifImage">
       <m-table
-         v-if="tableData.length >= 1"
+        v-if="ifExcel"
         ref="mtable"
         :loading="loading"
         :tableHeader="tableHeader"
@@ -27,7 +27,7 @@
         :showHeader="showHeader"
         :mergeTable="mergeTable"
       ></m-table>
-      <pre v-show="primaryFileData || ifWord" ref="fileData">{{ primaryFileData }}</pre>
+      <pre v-show="ifPrimary || ifWord" ref="fileData">{{ primaryFileData }}</pre>
       <img v-show="ifImage" :src="imageSrc" alt="Error">
     </div>
     <!-- pdf -->
@@ -65,11 +65,14 @@ export default {
       ifImage: false, // 是否展示图片
       imageSrc: "", // 图片数据 
       ifpdf: false, // 是否展示 pdf 
+      ifPrimary: false, // 普通文本数据
+      ifExcel: false, // excel 数据
       pdfData: "", // pdf 数据
       pageObj: {
         page: 1,
         pageSize: 100,
-      }
+      },
+      ifShow: ['ifWord','ifImage','ifpdf','ifExcel','ifPrimary',]
     };
   },
   mounted() {
@@ -80,6 +83,7 @@ export default {
       this.addClass(this.$refs.fileUpload.$el , 'animated infinite headShake');
       console.log(file);
       this.showHeader = false;
+      this.ifShow.map( v => { this[v] = false;})
       if (/.(xlsx|xls)$/.test(file.name)) 
         this.getExcelFileData(file);
       else if (/.(doc|docx)$/.test(file.name)) 
