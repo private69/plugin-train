@@ -12,8 +12,15 @@ import './plugin/echarts';
 import './assets/css/global.css'
 import './assets/css/icons/iconfont.css'
 
+import {addClass, removeClass} from './utils/animation'
+Vue.prototype.addClass = addClass;
+Vue.prototype.removeClass = removeClass;
+
 Vue.config.productionTip = false
 
+// import animate from "animate.css";
+import "animate.css";
+// Vue.use(animate);
 new Vue({
   router,
   store,

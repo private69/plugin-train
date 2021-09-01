@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@riophae/vue-treeselect": "^0.4.0",
+    "animate.css": "^3.5.1",
     "core-js": "^3.6.5",
     "echarts": "^5.1.2",
     "element-ui": "^2.15.5",

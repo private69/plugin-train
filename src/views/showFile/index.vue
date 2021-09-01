@@ -2,6 +2,7 @@
 <template>
   <div>
     <el-upload
+      ref="fileUpload"
       class="upload-demo"
       action="https://jsonplaceholder.typicode.com/posts/"
       :on-remove="handleRemove"
@@ -76,6 +77,7 @@ export default {
   methods: {  
     // 加载前的预览
     handleBeforeUpload(file) {
+      this.addClass(this.$refs.fileUpload.$el , 'animated infinite headShake');
       console.log(file);
       this.showHeader = false;
       if (/.(xlsx|xls)$/.test(file.name)) 
