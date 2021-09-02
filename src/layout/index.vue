@@ -32,10 +32,7 @@
         </el-menu-item>
         <!-- 不存在 children，即跳转新的页面 ，点击父级跳转 -->
         <el-menu-item v-else>
-          <i
-            v-if="item.meta.icon"
-            :class="icon.meta.icon"
-          ></i>
+          <i v-if="item.meta.icon" :class="icon.meta.icon"></i>
           {{ item.meta.name }}
         </el-menu-item>
       </span>
@@ -71,23 +68,27 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .all-page {
   display: flex;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  .right-page {
+    width: 100%;
+  }
 }
 .el-menu-vertical-demo {
   display: "inline-block";
   min-width: 200px;
   height: 100vh;
+  // box-shadow: #fff 0 0 10px inset;
+  .is-active:not(.is-opened){
+    border: 0px solid #333;
+    box-shadow: #fff 0 0 5px inset;
+  }
 }
 .el-menu-vertical-demo i {
   padding-right: 10px;
 }
-.all-page .right-page{
-  width: 100%;
-}
-
 </style>
