@@ -10,8 +10,8 @@
       <!-- qrcodejs2 -->
       <div>
         <el-button @click="qrcodejs2 = !qrcodejs2">qrcodejs2:</el-button>
-        <el-button v-if="qrcodejs2" @click="qrcodejs2Down">down</el-button>
-        <el-button v-if="qrcodejs2" @click="qrcodejs2Parse">parse</el-button>
+        <el-button v-show="qrcodejs2" @click="qrcodejs2Down">down</el-button>
+        <el-button v-show="qrcodejs2" @click="qrcodejs2Parse">parse</el-button>
         <div v-show="qrcodejs2">
           <div class="qrcode" ref="qrCodeUrl"></div>
         </div>
@@ -19,8 +19,8 @@
       <!-- qrcode.vue -->
       <div>
         <el-button @click="qrcodeVue = !qrcodeVue">qrcode.vue</el-button>
-        <el-button v-if="qrcodeVue" @click="qrcodeVueDown">down</el-button>
-        <el-button v-if="qrcodeVue" @click="qrcodeVueParse">parse</el-button>
+        <el-button v-show="qrcodeVue" @click="qrcodeVueDown">down</el-button>
+        <el-button v-show="qrcodeVue" @click="qrcodeVueParse">parse</el-button>
         <div v-if="qrcodeVue">
           <qrcode-vue :value="qrcodeValue" size="160"></qrcode-vue>
         </div>

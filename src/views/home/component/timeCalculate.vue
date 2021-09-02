@@ -27,7 +27,11 @@
             ></el-date-picker>
           </el-form-item>
           <div>
-            <el-tag class="el-time__tags" v-for="(item, index) in dateList" :key="'date' + index">
+            <el-tag
+              class="el-time__tags"
+              v-for="(item, index) in dateList"
+              :key="'date' + index"
+            >
               {{ item }}
             </el-tag>
           </div>
@@ -37,7 +41,13 @@
   </div>
 </template>
 <script>
-import { getYear, getMonths, getDate, getDays , concatTime } from "../../../utils/timeProcess";
+import {
+  getYear,
+  getMonths,
+  getDate,
+  getDays,
+  concatTime,
+} from "../../../utils/timeProcess";
 export default {
   data() {
     return {
@@ -57,42 +67,72 @@ export default {
     },
     // 比较时间获取特定的区间
     compareTimeScales() {
-      let sYear = getYear(this.startTime), 
-          eYear = getYear(this.endTime),
-          sMon = getMonths(this.startTime),
-          eMon = getMonths(this.endTime),
-          sDate = getDate(this.startTime),
-          eDate = getDate(this.endTime);
+      let sYear = getYear(this.startTime),
+        eYear = getYear(this.endTime),
+        sMon = getMonths(this.startTime),
+        eMon = getMonths(this.endTime),
+        sDate = getDate(this.startTime),
+        eDate = getDate(this.endTime);
       let arr = [];
-      if(sMon > eMon || sYear > eYear) return ;
+      if (sMon > eMon || sYear > eYear) return;
       // 跨月
       if (eMon - sMon == 1) {
-        this.traversingTime(getDays(null, sMon), false, (date) => {
-          arr.push(concatTime(sYear , sMon , date));
-        } , sDate);
-        this.traversingTime(eDate, false, (date) => {
-          arr.push(concatTime(eYear , eMon , date));
-        } , 1);
-      } else if (sMon == eMon){
-        this.traversingTime(eDate, false, (date) => {
-          arr.push(concatTime(eYear , eMon , date));
-        } , sDate);
+        this.traversingTime(
+          getDays(null, sMon),
+          false,
+          (date) => {
+            arr.push(concatTime(sYear, sMon, date));
+          },
+          sDate
+        );
+        this.traversingTime(
+          eDate,
+          false,
+          (date) => {
+            arr.push(concatTime(eYear, eMon, date));
+          },
+          1
+        );
+      } else if (sMon == eMon) {
+        this.traversingTime(
+          eDate,
+          false,
+          (date) => {
+            arr.push(concatTime(eYear, eMon, date));
+          },
+          sDate
+        );
       } else {
-        this.traversingTime(getDays(null, sMon), false, (date) => {
-          arr.push(concatTime(sYear , sMon , date));
-        } , sDate);
-        this.traversingTime(getDays(null, sMon + 1), false, (date) => {
-          arr.push(concatTime(eYear , sMon + 1 , date));
-        } , 1);
-        this.traversingTime(eDate, false, (date) => {
-          arr.push(concatTime(eYear , eMon , date));
-        } , 1);
+        this.traversingTime(
+          getDays(null, sMon),
+          false,
+          (date) => {
+            arr.push(concatTime(sYear, sMon, date));
+          },
+          sDate
+        );
+        this.traversingTime(
+          getDays(null, sMon + 1),
+          false,
+          (date) => {
+            arr.push(concatTime(eYear, sMon + 1, date));
+          },
+          1
+        );
+        this.traversingTime(
+          eDate,
+          false,
+          (date) => {
+            arr.push(concatTime(eYear, eMon, date));
+          },
+          1
+        );
       }
       this.dateList = [...arr];
     },
 
     // 遍历获取日期
-    traversingTime(times, order = true, cb = null , min = 0) {
+    traversingTime(times, order = true, cb = null, min = 0) {
       if (!cb) return;
       // 递减
       if (order) {
@@ -114,14 +154,14 @@ export default {
   },
 };
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .time-operation {
   width: 70%;
   height: 250px;
   padding: 20px 0 20px 20px;
   overflow-y: scroll;
-}
-.time-operation .el-time__tags{ 
-  margin: 5px;
+  .el-time__tags {
+    margin: 5px
+  }
 }
 </style>

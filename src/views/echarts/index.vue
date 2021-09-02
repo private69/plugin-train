@@ -68,7 +68,11 @@ export default {
       cpmname: "",
     };
   },
-  mounted() {},
+  mounted() {
+    // if (!document) throw new Error("document is not exist !");
+    // let domList = document.getElementsByTagName("button");
+    // console.log(domList.length);
+  },
   methods: {
     showCpm(name) {
       if (this.cpmname == name) {
