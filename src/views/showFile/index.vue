@@ -15,10 +15,10 @@
       <el-button size="small" type="primary">点击上传</el-button>
       <div slot="tip" class="el-upload__tip">展示上传的文件的内容</div>
     </el-upload>
-    <div class="showArea" v-show="ifExcel || ifPrimary || ifWord || ifImage">
+    <div class="showArea" v-show="ifExcel || ifPrimary || ifWord || ifImage || ifJSON">
       <m-table
-        v-if="ifExcel"
         ref="mtable"
+        v-if="ifExcel || ifJSON"
         :loading="loading"
         :tableHeader="tableHeader"
         :tableData="tableData"
@@ -78,12 +78,13 @@ export default {
       ifpdf: false, // 是否展示 pdf
       ifPrimary: false, // 普通文本数据
       ifExcel: false, // excel 数据
+      ifJSON: false, // json 数据
       pdfData: "", // pdf 数据
       pageObj: {
         page: 1,
         pageSize: 100,
       },
-      ifShow: ["ifWord", "ifImage", "ifpdf", "ifExcel", "ifPrimary"],
+      ifShow: ["ifWord", "ifImage", "ifpdf", "ifExcel", "ifPrimary" , "ifJSON"],
     };
   },
   mounted() {},
@@ -102,6 +103,7 @@ export default {
       // this.addClass(this.$refs.fileUpload.$el, "animated infinite headShake");
       console.log(file);
       this.showHeader = false;
+      this.tableData = [];
       this.ifShow.map((v) => {
         this[v] = false;
       });
@@ -118,6 +120,7 @@ export default {
     getPrimaryFileData(file) {
       showFileData(file).then((res) => {
         console.log(res);
+        this.ifPrimary = true;
         this.primaryFileData = res;
       });
     },
@@ -157,6 +160,7 @@ export default {
           });
           this.tableData = [...arr];
           this.showHeader = true;
+          this.ifJSON = true;
         } catch (err) {
           console.error("err:", err.message);
         }
