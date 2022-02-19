@@ -15,7 +15,14 @@ export default {
       cpmname: 'timeCalculate'
     }
   },
-  mounted() {},
+  mounted() {
+    if(window.sessionStorage.length) {
+      console.log(window.sessionStorage);
+    };    
+    if(window.localStorage.length) {
+      console.log(window.localStorage)
+    }
+  },
   methods: {}
 }
 </script>

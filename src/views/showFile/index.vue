@@ -107,7 +107,7 @@ export default {
       this.ifShow.map((v) => {
         this[v] = false;
       });
-      if (/.(xlsx|xls)$/.test(file.name)) this.getExcelFileData(file);
+      if (/.(xlsx|xls|csv)$/.test(file.name)) this.getExcelFileData(file);
       else if (/.(doc|docx)$/.test(file.name)) this.getWordFileData(file);
       else if (/.(md|txt|js|html|css|bat|cmd)$/.test(file.name))
         this.getPrimaryFileData(file);
@@ -191,6 +191,10 @@ export default {
             return result.data[v.label].length;
           })
         );
+        this.loading = false;
+        this.$nextTick(() => {
+          // this.$refs.mTable.doLayout(); // 解决表格错位
+        });
         for (let i = 0; i < max; i++) {
           this.tableData[i] = {};
           this.tableHeader.map((v) => {
@@ -200,12 +204,9 @@ export default {
             return Object.values(v).filter((val) => val).length > 0;
           });
         }
-        this.$nextTick(() => {
-          this.$refs.mtable.$refs.mTable.doLayout(); // 解决表格错位
-          this.loading = false;
-        });
-        this.mergeTable = [...result.merge];
-        console.log(result);
+        // this.mergeTable = result.merge?[]:[...result.merge];
+        this.ifExcel = true;
+        console.log(this.tableHeader);
         console.log(this.tableData);
       });
     },
