@@ -13,6 +13,7 @@ import './assets/css/global.css'
 import './assets/css/icons/iconfont.css'
 
 import {addClass, removeClass} from './utils/animation'
+// import './utils/mouseMonitor'
 Vue.prototype.addClass = addClass;
 Vue.prototype.removeClass = removeClass;
 

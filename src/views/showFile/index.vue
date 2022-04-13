@@ -196,6 +196,7 @@ export default {
           // this.$refs.mTable.doLayout(); // 解决表格错位
         });
         for (let i = 0; i < max; i++) {
+          console.log(i);
           this.tableData[i] = {};
           this.tableHeader.map((v) => {
             this.tableData[i][v.label] = result.data[v.label][i] || "";
