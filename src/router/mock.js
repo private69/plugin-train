@@ -1,11 +1,21 @@
-import Layout from '../layout/index'
+import Layout from '@/layout/index'
+/**
+ * 单栏目
+ * {
+ *   path,component,children:[ {path,meta(name,icon),component} ]
+ * }
+ * 包含子栏目
+ * {
+ *   path
+ *   meta: { name }
+ *   children: [
+ *      { path,meta(name,icon),component},{...}
+ *   ]
+ * }
+ */
 export default [
     {
         path: '/',
-        component: () => import('../views/dragger')
-    },
-    {
-        path: '/index',
         component: Layout,
         children: [{
             path: '/',
@@ -14,8 +24,33 @@ export default [
                 icon: ''
             },
             component: () =>
-                import('../views/home')
+                import('@/views/home')
         }]
+    },
+    {
+        path: '/dragger',
+        component: Layout,
+        meta: {
+            name: "拖拽"
+        },
+        children: [
+            {
+                path: '/drgger-com',
+                meta: {
+                    name: '拖拽组件',
+                    icon: ''
+                },
+                component: () => import('@/views/dragger'),
+            },
+            {
+                path: '/drgger-map',
+                meta: {
+                    name: '地图',
+                    icon: ''
+                },
+                component: () => import('@/views/dragger'),
+            }
+        ]
     },
     {
         path: '/echarts',
@@ -27,7 +62,7 @@ export default [
                 icon: ''
             },
             component: () =>
-                import('../views/echarts/index')
+                import('@/views/echarts/index')
         }]
     },
     {
@@ -40,7 +75,7 @@ export default [
                 icon: ''
             },
             component: () =>
-                import('../views/mavonEditor/index')
+                import('@/views/mavonEditor/index')
         }]
     },
     {
@@ -57,7 +92,7 @@ export default [
             },
             // 详细到文件后缀，由于结构中存在多个index，避免冲突
             component: () =>
-                import('../views/amap/index.vue')
+                import('@/views/amap/index.vue')
         },
         {
             path: '/treeSelect',
@@ -66,7 +101,7 @@ export default [
                 icon: ''
             },
             component: () =>
-                import('../views/treeSelect/index')
+                import('@/views/treeSelect/index')
         }
         ]
     },
@@ -80,7 +115,7 @@ export default [
                 icon: ''
             },
             component: () =>
-                import('../views/showFile/index')
+                import('@/views/showFile/index')
         }]
     },
     {
@@ -93,7 +128,7 @@ export default [
                 icon: ''
             },
             component: () =>
-                import('../views/qrcode/index')
+                import('@/views/qrcode/index')
         }]
     },
     {
@@ -106,7 +141,7 @@ export default [
                 icon: ''
             },
             component: () =>
-                import('../views/newWins/index')
+                import('@/views/newWins/index')
         }]
     },
 

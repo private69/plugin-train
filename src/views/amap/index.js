@@ -1,6 +1,6 @@
 
 import mapList from './component/mapList';
-import mapEvent from '../../mixins/mapEvent';
+import mapEvent from '@/mixins/mapEvent';
 import { mapGetters, mapActions } from 'vuex';
 export default {
   components: { mapList },
@@ -58,6 +58,8 @@ export default {
     ]
     this.setMapMarkers(_obj)
     console.log(this.mapMarkers);
+
+    console.log(this.Map);
   },
   methods: {
     ...mapActions({

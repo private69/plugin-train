@@ -19,3 +19,5 @@ VueAMap.initAMapApiLoader({
 })
 
 Vue.use(VueAMap);
+
+Vue.prototype.Map = VueAMap;
