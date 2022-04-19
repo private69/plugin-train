@@ -61,6 +61,16 @@ export default {
       type: Number,
       default: 100,
     },
+    // 展示延迟时间
+    showDelay: {
+      type: Number,
+      default: 100,
+    },
+    // 隐藏延迟时间
+    hiddenDelay: {
+      type: Number,
+      default: 100,
+    },
   },
   data() {
     return {
@@ -74,6 +84,7 @@ export default {
     // 监听宽度变化更改
     inner_left_width(val) {
       this.setRightSize(val);
+      // this.getChangeKey();
     },
     // inner_left_height(val) {
     //   this.inner_left_height = this.calcRightRange(val);
@@ -88,7 +99,6 @@ export default {
       this.initSize("leftdiv");
       this.initSize("rightdiv");
 
-
       let chi = this.getChiNode("asider-dragger-switch");
       chi.style.cursor = "pointer";
       chi.title = "点击伸缩";
@@ -98,14 +108,25 @@ export default {
     }, 0);
   },
   methods: {
+    changeType(val,tag="1",type="width") {
+      console.log(val);
+      let max = type=="width"?document.body.clientWidth:document.body.clientHeight;
+      if ( tag && val.match(/(%)|(vw)/) != null) {
+        return max * 0.01 * parseFloat(val) + 'px'
+      }else if ( !tag && val.match(/(px)/) != null) {
+        console.log(val,"\t",max);
+        return Math.round((parseFloat(val)*100)/max)  + '%';
+      }
+      return val;
+    },
     initSize(name) {
       let chi = this.getChiNode(name);
       this.setSize(chi, "100%", "100%");
-      this.setSize(chi.children[0], "100%", "100%");
+      // this.setSize(chi.children[0], "100%", "100%");
     },
-    setRightSize(val,hei=null) {
-      this.inner_right_width = hei?val:this.calcRightRange(val);
-      this.inner_right_height = hei?hei:this.inner_left_height;
+    setRightSize(val, hei = null) {
+      this.inner_right_width = hei ? val : this.calcRightRange(val);
+      this.inner_right_height = hei ? hei : this.inner_left_height;
     },
     // 监听屏幕尺寸变化计算需要转化的尺寸
     screenChange() {
@@ -115,30 +136,28 @@ export default {
           let wid = document.body.clientWidth;
           let hei = document.body.clientHeight;
           let that_inner_wid = that.inner_left_width;
-          if(that_inner_wid != "0px") {
+          this.getChangeKey({name: "resize"},false);
+          if (that_inner_wid != "0px") {
             let inner_wid = parseFloat(that.inner_left_width);
-            if(that_inner_wid.indexOf("px") > -1){
-              wid = wid - inner_wid
-            }else if(
-              that_inner_wid.indexOf("vw") > -1 || 
+            if (that_inner_wid.indexOf("px") > -1) {
+              wid = wid - inner_wid;
+            } else if (
+              that_inner_wid.indexOf("vw") > -1 ||
               that_inner_wid.indexOf("%")
-            ){
-              wid = wid - (inner_wid * 0.01 * wid)
+            ) {
+              wid = wid - inner_wid * 0.01 * wid;
             }
           }
-          that.setRightSize(wid + "px",hei+'px');
+          that.setRightSize(wid + "px", hei + "px");
         })();
       };
     },
     // 计算剩余尺寸
     calcRightRange(val) {
       let m = this.max;
-      if (val.indexOf("vw") > -1)
-        return m - parseFloat(val) + "vw";
-      if (val.indexOf("vh") > -1)
-        return m - parseFloat(val) + "vh";
-      if (val.indexOf("%") > -1)
-        return m - parseFloat(val) + "%";
+      if (val.indexOf("vw") > -1) return m - parseFloat(val) + "vw";
+      if (val.indexOf("vh") > -1) return m - parseFloat(val) + "vh";
+      if (val.indexOf("%") > -1) return m - parseFloat(val) + "%";
       if (val.indexOf("px") > -1) {
         let width = window.innerWidth;
         let height = window.innerHeight;
@@ -151,23 +170,35 @@ export default {
     },
     // 伸展
     changeSize() {
+      let key = this.getChangeKey({name: "stretch"});
+      if (this[key] == "0px") {
+        this[key] = this.width;
+        let time = this.showDelay;
+        setTimeout(() => {
+          this.changeOpacity(true);
+        }, time);
+        // this.inner_left_height = this.height;
+      } else {
+        let time = this.hiddenDelay;
+        this.changeOpacity(false);
+        setTimeout(() => {
+          this[key] = "0px";
+        }, time);
+      }
+    },
+    getChangeKey(obj={},ifReverse=true) {
       let key = "inner_left_width";
       if (this.tag !== "width") {
         key = "inner_left_height";
       }
-
-      if (this[key] == "0px") {
-        this[key] = this.width;
-        setTimeout(() => {
-          this.changeOpacity(true);
-        }, 650);
-        // this.inner_left_height = this.height;
-      } else {
-        this.changeOpacity(false);
-        setTimeout(() => {
-          this[key] = "0px";
-        }, 100);
+      let res = {
+        leftSize: this.changeType(ifReverse?this[key]!="0px"?"0px":this[this.tag]:this[key]),
+        rightSize: this.changeType(this.calcRightRange(ifReverse?this[key]!="0px"?"0px":this[this.tag]:this[key])),
+        ...obj
       }
+      // 返回相关信息
+      this.$emit("handleOnClick", res);
+      return key;
     },
     // 修改透明度
     changeOpacity(tag) {
@@ -214,14 +245,14 @@ export default {
   .asider-dragger-switch {
     transition: 1s;
     position: absolute;
-    z-index: 1000;
+    z-index: 9000;
   }
   .asider-dragger-switch:hover {
     border-right: 1px solid #f0f0f0;
     border-left: 1px solid #f0f0f0;
-    }
+    box-shadow: #333 0px 0px 3px inset;
+  }
   .asider-dragger-switch:active {
-    box-shadow: 2px 2px 3px #333 inset;
   }
   .rightdiv {
     display: inline-block;

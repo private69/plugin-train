@@ -5,7 +5,7 @@
       stripe
       :ref="refName"
       :height="height"
-      :style="width"
+      :style="'width:' + width"
       v-loading="loading"
       @selection-change="handleSelectionChange"
       @row-click="handleRowClick"
@@ -30,7 +30,7 @@
           :align="item.align"
         >
           <template slot-scope="scope">
-            {{ scope.$index + 1 }}
+            {{ (isPagination?(pagination.currentPage-1)*pagination.pageSize:0) + scope.$index + 1 }}
           </template>
         </el-table-column>
         <!-- 默认 -->
@@ -41,6 +41,8 @@
           :label="item.label"
           :width="item.width"
           :align="item.align"
+          :formatter="item.formatter"
+          :sortable="item.formatter?true:false"
           :show-overflow-tooltip="true"
         >
         </el-table-column>
@@ -91,7 +93,7 @@
 
 <script>
 export default {
-  name: "l-table",
+  name: "m-table",
   props: {
     refName: {
       type: String,
@@ -279,6 +281,6 @@ export default {
 </script>
 <style scoped>
 .l-table {
-  min-width: 800px;
+  /* min-width: 800px; */
 }
 </style>

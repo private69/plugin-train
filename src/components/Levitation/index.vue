@@ -1,19 +1,24 @@
 <template>
-  <div class="levitation-main" :style="'top:' + top_copy">
+  <div class="levitation-main" :style="'top:' + top_copy+';height: 100%;'">
     <el-row :gutter="0">
       <slot name="title">
         <el-col :span="6" v-if="showTitle">
-          {{ title }}
+          <span class="title">
+            {{ title }}
+          </span>
         </el-col>
       </slot>
       <div class="menu_bar" :style="'right:' + right">
         <slot name="other"></slot>
         <span v-if="showMax" @click="handleMax">
-          <i class="el-icon-arrow-up"></i>
+          <slot name="max">
+            <i class="el-icon-arrow-up"></i>
+          </slot>
         </span>
         <span v-if="showMini" @click="handleMini">
-          <i class="el-icon-arrow-down" ></i>
-          <!-- <span>-</span> -->
+          <slot name="mini">
+            <i class="el-icon-arrow-down"></i>
+          </slot>
         </span>
       </div>
     </el-row>
@@ -48,6 +53,10 @@ export default {
       type: String,
       default: "70%",
     },
+    "slide-range": {
+      type: Array,
+      default: () => ["20%", "70%", "95%"],
+    },
   },
   data() {
     return {
@@ -55,56 +64,98 @@ export default {
     };
   },
   mounted() {
-      this.top_copy = this.top;
+    this.top_copy = this.slideRange[this.slideRange.length-1];
   },
   methods: {
+    // 排序
+    sort(arr) {
+      let [a0, a1] = arr;
+      console.log(arr);
+      return;
+    },
+    // top 变小
     handleMini() {
       if (!this.top_copy) {
         this.top_copy = this.top;
       }
-    //   this.top_copy = "70%";
-        this.aa("top_copy",this.top_copy,"70%","%")
+      let nowTop = this.top_copy;
+      let index = this.slideRange.indexOf(nowTop);
+      console.log(nowTop, "\t", index);
+      if (index == "-1") {
+        throw new Error("top_copy is not in 'slideRange'");
+      }
+      if (index == this.slideRange.length - 1) {
+        return;
+      }
+      this.changeTopSize(
+        "top_copy",
+        this.top_copy,
+        this.slideRange[index + 1],
+        "%"
+      );
     },
+    // top 增大
     handleMax() {
       if (!this.top_copy) {
         this.top_copy = this.top;
       }
-    //   this.top_copy = "20%";
-    this.aa("top_copy",this.top_copy,"20%","%")
+      let nowTop = this.top_copy;
+      let index = this.slideRange.indexOf(nowTop);
+      console.log(nowTop, "\t", index);
+      if (index == "-1") {
+        throw new Error("top_copy is not in 'slideRange'");
+      }
+      if (index == 0) {
+        return;
+      }
+      this.changeTopSize(
+        "top_copy",
+        this.top_copy,
+        this.slideRange[index - 1],
+        "%"
+      );
     },
-    aa(key,from,to,tag="%") {
-        if(from==to) return ;
-        let tempF = parseInt(from);
-        let tempT = parseInt(to);
-        let temp = tempF;
-        let i = setInterval( () => {
-            if( (tempF > tempT && temp <= tempT) ||
-                (tempF < tempT && temp >= tempT)
-            ) {
-                clearInterval(i)
-            }else {
-                if(tempF > tempT) temp -= 1;
-                if(tempF < tempT) temp += 1;
-                this[key] = temp + tag;
-            }
-        },4)
-    }
+    changeTopSize(key, from, to, tag = "%") {
+      if (from == to) return;
+      let tempF = parseInt(from);
+      let tempT = parseInt(to);
+      let time = Math.round(
+        tempF > tempT ? 200 / (tempF - tempT) : 200 / (tempT - tempF)
+      );
+      let temp = tempF;
+      let i = setInterval(() => {
+        if (
+          (tempF > tempT && temp <= tempT) ||
+          (tempF < tempT && temp >= tempT)
+        ) {
+          clearInterval(i);
+        } else {
+          if (tempF > tempT) temp -= 1;
+          if (tempF < tempT) temp += 1;
+          this[key] = temp + tag;
+        }
+      }, time);
+    },
   },
 };
 </script>
 <style lang="scss">
 .levitation-main {
   width: 100%;
-  height: 100%;
   padding: 5px 5px 5px 20px;
   position: absolute;
-  //   border-top: 1px solid #4f8eec;
+  // z-index: 3000;
+  background-color: #fff;
   .menu_bar {
     position: fixed;
     > span {
       padding: 5px;
       cursor: pointer;
     }
+  }
+  .title {
+    font-weight: bold;
+    cursor: pointer;
   }
 }
 </style>

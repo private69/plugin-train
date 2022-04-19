@@ -13,9 +13,12 @@ import './assets/css/global.css'
 import './assets/css/icons/iconfont.css'
 
 import {addClass, removeClass} from './utils/animation'
+import {insertScript,insertLink} from "./utils/script"
 // import './utils/mouseMonitor'
 Vue.prototype.addClass = addClass;
 Vue.prototype.removeClass = removeClass;
+Vue.prototype.insertScript = insertScript;
+Vue.prototype.insertLink = insertLink;
 
 Vue.config.productionTip = false
 

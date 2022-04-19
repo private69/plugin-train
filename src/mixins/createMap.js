@@ -17,6 +17,9 @@ module.exports = {
         getMap() {
             return this.mapObject;
         },
+        setMap(map) {
+            this.mapObject = {...map};
+        },
         // 设置map参数
         setConfig(obj = {}) {
             let keySet = Object.keys(obj);
