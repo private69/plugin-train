@@ -154,7 +154,7 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .time-operation {
   width: 70%;
   height: 250px;

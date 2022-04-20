@@ -61,7 +61,7 @@ export default {
   methods: {},
 };
 </script>
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .asider-dragger-controller {
   .show-block {
     .controller-tips {

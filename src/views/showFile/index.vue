@@ -215,7 +215,7 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .showArea {
   margin-top: 50px;
   height: 500px;

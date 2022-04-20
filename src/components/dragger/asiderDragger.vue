@@ -201,7 +201,7 @@ export default {
   },
 };
 </script>
-<style lang="scss">
+<style lang="less">
 .asiderDragger {
   width: 100%;
   height: 100%;

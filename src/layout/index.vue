@@ -68,7 +68,7 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .all-page {
   display: flex;
   width: 100vw;

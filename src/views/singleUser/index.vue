@@ -9,7 +9,7 @@ export default {
     mixins: []
 }
 </script>
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .single_user {
     width: 100vw;
     height: 30vh;
