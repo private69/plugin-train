@@ -224,11 +224,18 @@ export default {
       }
     }
     // .BMap_noprint ,
+    // 地图类型控件
     .anchorTR{
-      inset: auto auto 120px 10px !important;
+      inset: 10px auto auto 10px !important;
     }
+    // 标尺
     .BMap_scaleCtrl.BMap_noprint.anchorBL {
       inset: auto auto 20px 10px !important;
+    }
+    // 范围选择
+    .BMap_stdMpCtrl.BMap_stdMpType0.BMap_noprint.anchorTL {
+      inset: 50px auto auto 10px !important;
+
     }
   }
 }

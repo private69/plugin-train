@@ -31,10 +31,10 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-checkbox v-model="checked">4G</el-checkbox>
-        <el-checkbox v-model="checked">5G</el-checkbox>
-        <el-checkbox v-model="checked">站点</el-checkbox>
-        <el-checkbox v-model="checked">站点名</el-checkbox>
+        <el-checkbox v-model="label4G">4G</el-checkbox>
+        <el-checkbox v-model="label5G">5G</el-checkbox>
+        <el-checkbox v-model="labelStation">站点</el-checkbox>
+        <el-checkbox v-model="labelStationName">站点名</el-checkbox>
       </el-form-item>
       <el-form-item>
         <el-input
@@ -92,7 +92,11 @@ export default {
       longitude: "",
       latitude: "",
       eci: "",
-      checked: "",
+      label4G: true,
+      label5G: true,
+      labelStation: true,
+      labelStationName: true,
+      labelArr: ["label4G","label5G","labelStation","labelStationName"]
     };
   },
   mounted() {
@@ -113,6 +117,20 @@ export default {
         })();
       };
     },
+    returnFormData() {
+      if(this.dateRange.length<2) return ;
+      if(this.msisdn=="") return ;
+      let label = this.labelArr.filter(v=>this[v]);
+      if(!label.length) return ;
+      return {
+        startTime: this.dateRange[0],
+        endTime: this.dateRange[1],
+        msisdn: this.msisdn,
+        eci: this.eci,
+        lng: this.longitude,
+        lat: this.latitude,
+      }
+    }
   },
 };
 </script>
