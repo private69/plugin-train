@@ -56,6 +56,7 @@ import asiderDraggerCon from "@/components/dragger/asiderDraggerCon.vue";
 import Levitation from "@/components/Levitation/index.vue";
 import LeftCom from "./component/leftCom.vue";
 import mTable from "@/components/mTable.vue";
+import baiduMap from "@/mixins/baiduMapMinxins"
 
 window.BMAPGL_URL = "https://gis.10621234.com:9081/dugis-baidu";
 window.TRAFFIC_URL = "https://gis.10621234.com:9081/dugis-baidu";
@@ -69,6 +70,7 @@ export default {
     Levitation,
     mTable,
   },
+  mixins: [baiduMap],
   data() {
     return {
       loadingMap: true,
@@ -151,6 +153,7 @@ export default {
               this.addControl(map, "MapTypeControl");
               this.addControl(map, "NavigationControl"); // 导航控件
               this.loadingMap = false;
+              this.addCircle(map,108.574138248194, 34.197235684692,1000);
             }, 4000);
           }
         );
