@@ -12,8 +12,8 @@
       <div slot="switch" style="font-size: 20px;">
         <i class="el-icon-arrow-right" style="margin-top: 45vh;"></i>
       </div>
-      <div slot="right">
-        <div style="width: 100%;height:500px" id="allmap">
+      <div slot="right" class="dragger-right_bdmap">
+        <div id="allmap">
           <i class="el-icon-loading loadingMap" v-if="loadingMap"></i>
         </div>
         <Levitation
@@ -147,9 +147,9 @@ export default {
               let map = new window.BMap.Map("allmap");
               map.centerAndZoom(new BMap.Point(116.404, 39.915), 11);
               map.enableScrollWheelZoom(true);
-              this.addControl(map,"ScaleControl");
-              this.addControl(map,"MapTypeControl");
-              this.addControl(map,"NavigationControl"); // 导航控件
+              this.addControl(map, "ScaleControl");
+              this.addControl(map, "MapTypeControl");
+              this.addControl(map, "NavigationControl"); // 导航控件
               this.loadingMap = false;
             }, 4000);
           }
@@ -158,7 +158,7 @@ export default {
     );
   },
   methods: {
-    addControl(map,controller) {
+    addControl(map, controller) {
       let ctrl = new window.BMap[controller]();
       map.addControl(ctrl);
     },
@@ -186,7 +186,7 @@ export default {
 };
 // https://pan.baidu.com/s/1Vg7NkKppWrpFiICXFk3yA
 </script>
-<style lang="less" scoped>
+<style lang="less">
 .dragger {
   margin: 0 auto;
   width: 100vw;
@@ -207,6 +207,29 @@ export default {
     top: 200px;
     right: 50%;
     opacity: 0.3;
+  }
+  .dragger-right_bdmap {
+    // width: 40vw;
+    height: 99.8vh;
+    #allmap {
+      margin: auto 20px;
+      width: 85%;
+      height: 70%;
+    }
+    .anchorBL {
+      > span > span,
+      > a {
+        opacity: 0;
+        display: none;
+      }
+    }
+    // .BMap_noprint ,
+    .anchorTR{
+      inset: auto auto 120px 10px !important;
+    }
+    .BMap_scaleCtrl.BMap_noprint.anchorBL {
+      inset: auto auto 20px 10px !important;
+    }
   }
 }
 </style>
