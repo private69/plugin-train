@@ -186,7 +186,7 @@ export default {
 };
 // https://pan.baidu.com/s/1Vg7NkKppWrpFiICXFk3yA
 </script>
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .dragger {
   margin: 0 auto;
   width: 100vw;

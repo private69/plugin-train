@@ -116,7 +116,7 @@ export default {
   },
 };
 </script>
-<style lang="scss">
+<style lang="less">
 .leftCom {
   // width: 100vw;
   height: 100%;
